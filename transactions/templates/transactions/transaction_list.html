@@ -1,0 +1,31 @@
+{% extends 'transactions/base.html' %}
+
+{% block title %}Transactions Dashboard - CyberFinance{% endblock %}
+
+{% block content %}
+    <h1>Financial Transactions</h1>
+    <p>Monitoring your latest capital flows.</p>
+
+    {% for tx in transactions %}
+        <div class="card {% if tx.transaction_type == 'expense' %}expense{% else %}income{% endif %}">
+            <div>
+                <a href="{% url 'transaction_detail' tx.pk %}" style="font-size: 1.1em; font-weight: 500;">
+                    {{ tx.created_at|date:"d.m.Y H:i" }} |
+                    {% if tx.transaction_type == 'expense' %}Spent from{% else %}Received to{% endif %}
+                    {{ tx.account.name }}
+                </a>
+                <div style="margin-top: 5px; font-size: 0.9em; color: #aaa;">
+                    Category: <strong>{{ tx.category.name }}</strong>
+                </div>
+            </div>
+            <div style="font-size: 1.2em; font-weight: bold;">
+                {% if tx.transaction_type == 'expense' %}-{% else %}+{% endif %}{{ tx.amount }} UAH
+            </div>
+        </div>
+    {% empty %}
+        <p style="color: #aaa; font-style: italic;">No financial operations recorded yet. Go to Django Admin to add some.</p>
+    {% endfor %}
+
+    <p style="margin-top: 20px; color: #aaa;">Total entries logged: <strong>{{ transactions.count }}</strong></p>
+{% endblock %}
+

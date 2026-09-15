@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}CyberFinance{% endblock %}</title>
+    <style>
+        body { font-family: sans-serif; background-color: #121212; color: #e0e0e0; max-width: 800px; margin: 40px auto; padding: 0 20px; }
+        h1, h2 { color: #00adb5; }
+        a { color: #00adb5; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        nav { background-color: #1e1e1e; padding: 15px; border-radius: 8px; margin-bottom: 20px; display: flex; gap: 20px; }
+        nav a { font-weight: bold; color: #ffffff; }
+        .card { background-color: #1e1e1e; padding: 15px; border-radius: 8px; margin-bottom: 12px; border-left: 5px solid #393e46; display: flex; justify-content: space-between; align-items: center; }
+        .expense { border-left-color: #ff2e63; }
+        .income { border-left-color: #21bf73; }
+        .badge { background-color: #393e46; padding: 3px 8px; border-radius: 4px; font-size: 0.85em; margin-right: 5px; }
+        .back-btn { display: inline-block; margin-top: 20px; color: #bbb; }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="{% url 'transaction_list' %}"> Transactions Dashboard</a>
+        <a href="{% url 'account_list' %}"> My Accounts</a>
+    </nav>
+    <hr style="border-color: #393e46;">
+
+    {% block content %}{% endblock %}
+</body>
+</html>

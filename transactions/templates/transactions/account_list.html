@@ -1,0 +1,39 @@
+{% extends 'transactions/base.html' %}
+
+{% block title %}My Accounts - CyberFinance{% endblock %}
+
+{% block content %}
+    <h1>My Financial Accounts</h1>
+    <p>Overview of your available wallets and assets.</p>
+
+    {% for account in accounts %}
+        <div style="background-color: #1e1e1e; padding: 20px; border-radius: 8px; margin-bottom: 20px; border-top: 4px solid #00adb5;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h3 style="margin: 0; color: #ffffff;">{{ account.name }} <span style="font-weight: normal; font-size: 0.8em; color: #aaa;">({{ account.get_account_type_display }})</span></h3>
+                <span style="font-size: 1.2em; font-weight: bold; color: {% if account.is_negative %}#ff2e63{% else %}#ffffff{% endif %};">
+                    {{ account.balance }} UAH
+                </span>
+            </div>
+
+            <!-- Із зірочкою: Вивід списку пов'язаних транзакцій через зворотний зв'язь (.transactions.all) -->
+            <h4 style="margin: 10px 0 5px 0; color: #aaa; font-size: 0.9em;">Recent history for this wallet:</h4>
+            <ul style="margin: 0; padding-left: 20px; font-size: 0.9em; color: #bbb;">
+                {% for tx in account.transactions.all|slice:":3" %} <!-- Показуємо топ-3 останні операції рахунку -->
+                    <li>
+                        {{ tx.created_at|date:"d.m" }} |
+                        <span style="color: {% if tx.transaction_type == 'expense' %}#ff2e63{% else %}#21bf73{% endif %};">
+                            {% if tx.transaction_type == 'expense' %}-{% else %}+{% endif %}{{ tx.amount }} UAH
+                        </span>
+                        ({{ tx.category.name }})
+                    </li>
+                {% empty %}
+                    <li style="color: #666; font-style: italic; list-style-type: none; margin-left: -20px;">No transactions recorded for this wallet yet.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% empty %}
+        <p>No financial accounts set up yet.</p>
+    {% endfor %}
+
+    <a href="{% url 'transaction_list' %}" class="back-btn">&larr; Back to Dashboard</a>
+{% endblock %}
