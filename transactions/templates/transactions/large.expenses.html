@@ -1,0 +1,24 @@
+{% extends 'transactions/base.html' %}
+
+{% block title %}Large Expenses - CyberFinance{% endblock %}
+
+{% block content %}
+    <h1> High-Value Expenses</h1>
+    <p style="color: #ff2e63;">Displaying financial write-offs that exceed 500.00 UAH.</p>
+
+    {% for tx in transactions %}
+        <div class="card expense">
+            <div>
+                <a href="{% url 'transaction_detail' tx.pk %}" style="font-size: 1.1em; font-weight: 500;">
+                    {{ tx.created_at|date:"d.m.Y" }} | Wallet: {{ tx.account.name }}
+                </a>
+                <p style="margin: 5px 0 0 0; font-size: 0.9em; color: #bbb;">Comment: "{{ tx.comment }}"</p>
+            </div>
+            <div style="font-size: 1.2em; font-weight: bold; color: #ff2e63;">
+                -{{ tx.amount }} UAH
+            </div>
+        </div>
+    {% empty %}
+        <p style="color: #aaa; font-style: italic;">Relax. No major budget leaks found over 500 UAH.</p>
+    {% endfor %}
+{% endblock %}

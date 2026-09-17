@@ -20,8 +20,16 @@ from transactions import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.transaction_list, name='transaction_list'),
-    path('transactions/<int:pk>/', views.transaction_detail, name='transaction_detail'),
-    path('accounts/', views.account_list, name='account_list'),
+    path('', views.TransactionListView.as_view(), name='transaction_list'),
+    path('transactions/new/', views.TransactionCreateView.as_view(), name='transaction_create'),
+    path('transactions/large/', views.LargeExpensesListView.as_view(), name='large_expenses'),
+    path('transactions/<int:pk>', views.TransactionDetailView.as_view(), name='transaction_detail'),
+    path('transactions/<int:pk>/edit/', views.TransactionUpdateView.as_view(), name='transaction_update'),
+    path('transactions/<int:pk>/delete/', views.TransactionDeleteView.as_view(), name='transaction_delete'),
+
+    path('accounts/', views.AccountListView.as_view(), name='account_list'),
+    path('accounts/new/', views.AccountCreateView.as_view(), name='account_create'),
+    path('accounts/<int:pk>/', views.AccountDetailView.as_view(), name='account_detail'),
+    path('accounts/<int:pk>/edit/', views.AccountUpdateView.as_view(), name='account_update'),
 ]
 

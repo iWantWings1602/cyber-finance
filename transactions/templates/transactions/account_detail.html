@@ -1,0 +1,29 @@
+{% extends 'transactions/base.html' %}
+
+{% block title %}{{ account.name }} Wallet - CyberFinance{% endblock %}
+
+{% block content %}
+    <h1>Wallet Profile: {{ account.name }}</h1>
+    <p>Asset Type: <strong>{{ account.get_account_type_display }}</strong></p>
+    <p>Total Equity Balance: <span style="font-size: 1.3em; font-weight: bold; color: #21bf73;">{{ account.balance }} UAH</span></p>
+
+    <hr style="border-color: #393e46; margin: 25px 0;">
+
+    <h2>Statement for this specific account (Context linked)</h2>
+
+    {% for tx in account_transactions %}
+        <div class="card {% if tx.transaction_type == 'expense' %}expense{% else %}income{% endif %}" style="font-size: 0.95em;">
+            <div>
+                <strong>{{ tx.created_at|date:"d M Y" }}</strong> | Category: {{ tx.category.name }}
+                <span style="display:block; font-size:0.85em; color:#888;">Comment: {{ tx.comment|default:"No notes" }}</span>
+            </div>
+            <div style="font-weight: bold;">
+                {% if tx.transaction_type == 'expense' %}-{% else %}+{% endif %}{{ tx.amount }} UAH
+            </div>
+        </div>
+    {% empty %}
+        <p style="color: #666; font-style: italic;">No transactions recorded on this asset account yet.</p>
+    {% endfor %}
+
+    <a href="{% url 'account_list' %}" style="display:inline-block; margin-top:20px;">&larr; Back to Assets list</a>
+{% endblock %}

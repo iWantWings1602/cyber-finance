@@ -1,18 +1,18 @@
 {% extends 'transactions/base.html' %}
 
-{% block title %}Transactions Dashboard - CyberFinance{% endblock %}
+{% block title %}Ledger - CyberFinance{% endblock %}
 
 {% block content %}
-    <h1>Financial Transactions</h1>
-    <p>Monitoring your latest capital flows.</p>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h1>Financial Ledger</h1>
+        <a href="{% url 'transaction_create' %}" class="btn">+ Record Transaction</a>
+    </div>
 
     {% for tx in transactions %}
         <div class="card {% if tx.transaction_type == 'expense' %}expense{% else %}income{% endif %}">
             <div>
                 <a href="{% url 'transaction_detail' tx.pk %}" style="font-size: 1.1em; font-weight: 500;">
-                    {{ tx.created_at|date:"d.m.Y H:i" }} |
-                    {% if tx.transaction_type == 'expense' %}Spent from{% else %}Received to{% endif %}
-                    {{ tx.account.name }}
+                    {{ tx.created_at|date:"d.m.Y H:i" }} | {{ tx.account.name }}
                 </a>
                 <div style="margin-top: 5px; font-size: 0.9em; color: #aaa;">
                     Category: <strong>{{ tx.category.name }}</strong>
@@ -23,9 +23,24 @@
             </div>
         </div>
     {% empty %}
-        <p style="color: #aaa; font-style: italic;">No financial operations recorded yet. Go to Django Admin to add some.</p>
+        <p style="color: #aaa; font-style: italic;">No transactions match your criteria.</p>
     {% endfor %}
 
-    <p style="margin-top: 20px; color: #aaa;">Total entries logged: <strong>{{ transactions.count }}</strong></p>
+    {% if is_paginated %}
+        <nav class="pagination">
+            {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">&larr; Previous</a>
+            {% endif %}
+
+            <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">Next &rarr;</a>
+            {% endif %}
+        </nav>
+    {% endif %}
+
+    <p style="margin-top: 20px; color: #aaa;">Total records across database: <strong>{{ paginator.count }}</strong></p>
 {% endblock %}
+
 

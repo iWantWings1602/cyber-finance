@@ -1,41 +1,36 @@
 {% extends 'transactions/base.html' %}
 
-{% block title %}Transaction details #{{ transaction.pk }}{% endblock %}
+{% block title %}Transaction #{{ transaction.pk }}{% endblock %}
 
 {% block content %}
-    <h1>Transaction details (ID: #{{ transaction.pk }})</h1>
+    <h1>Transaction Profile (ID: #{{ transaction.pk }})</h1>
 
     <div style="background-color: #1e1e1e; padding: 25px; border-radius: 8px; margin-top: 20px;">
-        <p><strong>Account:</strong> {{ transaction.account.name }} ({{ transaction.account.get_account_type_display }})</p>
+        <p><strong>Account:</strong> {{ transaction.account.name }}</p>
         <p><strong>Category:</strong> {{ transaction.category.name|default:"Uncategorized" }}</p>
-        <p><strong>Type:</strong>
-            {% if transaction.transaction_type == 'expense' %}
-                <span style="color: #ff2e63; font-weight: bold;">EXPENSE</span>
-            {% else %}
-                <span style="color: #21bf73; font-weight: bold;">INCOME</span>
-            {% endif %}
-        </p>
-
+        <p><strong>Type:</strong> <span style="color: {% if transaction.transaction_type == 'expense' %}#ff2e63{% else %}#21bf73{% endif %}; font-weight: bold;">{{ transaction.transaction_type|upper }}</span></p>
         <p><strong>Financial Volume:</strong> <span style="font-size: 1.3em; font-weight: bold;">{{ transaction.amount|floatformat:2 }} UAH</span></p>
-        <p><strong>Execution Date:</strong> {{ transaction.created_at|date:"F d, Y @ H:i" }}</p>
+        <p><strong>Date:</strong> {{ transaction.created_at|date:"F d, Y @ H:i" }}</p>
 
-        <p><strong>Attached Tags:</strong>
+        <p><strong>Tags:</strong>
             {% for tag in transaction.tags.all %}
-                <span class="badge">{{ tag.name }}</span>
+                <span class="badge" style="background: #00adb5;">{{ tag.name }}</span>
             {% empty %}
-                <span style="color: #666; font-style: italic;">No tags attached</span>
+                <span style="color: #666;">None</span>
             {% endfor %}
         </p>
 
-        <p><strong>User Comment / Notes:</strong></p>
+        <p><strong>Notes:</strong></p>
         {% if transaction.comment %}
-            <blockquote style="border-left: 3px solid #00adb5; padding-left: 15px; margin-left: 10px; color: #bbb; font-style: italic;">
-                "{{ transaction.comment|truncatewords:10 }}"
-            </blockquote>
+            <blockquote style="border-left: 3px solid #00adb5; padding-left: 15px; color: #bbb; font-style: italic;">"{{ transaction.comment }}"</blockquote>
         {% else %}
-            <p style="color: #666; font-style: italic; margin-left: 10px;">No notes provided for this transaction.</p>
+            <p style="color: #666; font-style: italic;">No comments text found.</p>
         {% endif %}
     </div>
 
-    <a href="{% url 'transaction_list' %}" class="back-btn" style="display: inline-block; margin-top: 20px; color: #bbb;">&larr; Back to Dashboard</a>
+    <div style="margin-top: 20px; display: flex; gap: 10px;">
+        <a href="{% url 'transaction_update' transaction.pk %}" class="btn">✏ Edit Record</a>
+        <a href="{% url 'transaction_delete' transaction.pk %}" class="btn btn-danger">🗑 Delete</a>
+    </div>
 {% endblock %}
+

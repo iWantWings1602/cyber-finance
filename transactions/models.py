@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.validators import MinValueValidator
+from django.urls import reverse
 
 
 class Account(models.Model):
@@ -31,9 +32,13 @@ class Account(models.Model):
     def is_negative(self):
         return self.balance < 0
 
+    def get_absolute_url(self):
+        return reverse('account_list')
+
     class Meta:
         verbose_name = 'Account'
         verbose_name_plural = 'Accounts'
+
 
 class Category(models.Model):
     name = models.CharField(max_length=50, unique=True, verbose_name='Category Name')
@@ -104,6 +109,9 @@ class Transaction(models.Model):
     def __str__(self):
         sign = '-' if self.transaction_type == 'expense' else '+'
         return f'{self.created_at.strftime('%d.%m.%Y')} : {sign}{self.amount} UAH ({self.account.name})'
+
+    def get_absolute_url(self):
+        return reverse('transaction_detail', kwargs={'pk': self.pk})
 
     class Meta:
         verbose_name = 'Transaction'
