@@ -1,0 +1,14 @@
+{% extends 'transactions/base.html' %}
+
+{% block title %}Create Account - CyberFinance{% endblock %}
+
+{% block content %}
+    <h1 style="color: #00adb5;">Join CyberFinance</h1>
+    <p style="color: #aaa;">Sign up now to build your individual secure crypto and cash portfolio trackers.</p>
+
+    <form method="post" style="background: #1e1e1e; padding: 25px; border-radius: 8px; margin-top: 20px;">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn" style="margin-top: 15px;">Register Account</button>
+    </form>
+{% endblock %}

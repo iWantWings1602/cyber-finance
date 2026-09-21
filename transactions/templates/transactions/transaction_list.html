@@ -5,17 +5,17 @@
 {% block content %}
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
         <h1>Financial Ledger</h1>
-        <a href="{% url 'transaction_create' %}" class="btn">+ Record Transaction</a>
+        <a href="{% url 'transaction_create' %}" class="btn" style="background-color: #00adb5; color: #fff; padding: 8px 15px; border-radius: 5px; font-weight: bold;">+ Record Transaction</a>
     </div>
 
     {% for tx in transactions %}
-        <div class="card {% if tx.transaction_type == 'expense' %}expense{% else %}income{% endif %}">
+        <div class="card {% if tx.transaction_type == 'expense' %}expense{% else %}income{% endif %}" style="background-color: #1e1e1e; padding: 15px; border-radius: 8px; margin-bottom: 12px; border-left: 5px solid {% if tx.transaction_type == 'expense' %}#ff2e63{% else %}#21bf73{% endif %}; display: flex; justify-content: space-between; align-items: center;">
             <div>
                 <a href="{% url 'transaction_detail' tx.pk %}" style="font-size: 1.1em; font-weight: 500;">
                     {{ tx.created_at|date:"d.m.Y H:i" }} | {{ tx.account.name }}
                 </a>
                 <div style="margin-top: 5px; font-size: 0.9em; color: #aaa;">
-                    Category: <strong>{{ tx.category.name }}</strong>
+                    Category: <strong>{{ tx.category.name }}</strong> | Owner: <em>{{ tx.owner.username }}</em>
                 </div>
             </div>
             <div style="font-size: 1.2em; font-weight: bold;">
@@ -27,20 +27,18 @@
     {% endfor %}
 
     {% if is_paginated %}
-        <nav class="pagination">
+        <div style="display: flex; justify-content: center; gap: 15px; margin-top: 25px; background: #1e1e1e; padding: 10px; border-radius: 5px;">
             {% if page_obj.has_previous %}
                 <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">&larr; Previous</a>
             {% endif %}
-
             <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
-
             {% if page_obj.has_next %}
                 <a href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">Next &rarr;</a>
             {% endif %}
-        </nav>
+        </div>
     {% endif %}
 
-    <p style="margin-top: 20px; color: #aaa;">Total records across database: <strong>{{ paginator.count }}</strong></p>
+    <p style="margin-top: 20px; color: #aaa;">Total records: <strong>{{ paginator.count|default:transactions.count }}</strong></p>
 {% endblock %}
 
 

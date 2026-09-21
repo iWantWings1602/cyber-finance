@@ -1,0 +1,27 @@
+{% extends 'transactions/base.html' %}
+
+{% block title %}{% if object %}Modify Wallet{% else %}New Wallet{% endif %}{% endblock %}
+
+{% block content %}
+    <h1>{% if object %} Edit Wallet: {{ object.name }}{% else %} Create New Financial Account{% endif %}</h1>
+    <p style="color: #aaa;">Add cash, bank cards, or crypto assets to your personal portfolio tracker.</p>
+
+    <form method="post" style="background: #1e1e1e; padding: 25px; border-radius: 8px; margin-top: 20px;">
+        {% csrf_token %}
+
+        {% for field in form %}
+            <div class="form-group" style="margin-bottom: 15px;">
+                <label for="{{ field.id_for_label }}" style="display: block; margin-bottom: 5px; font-weight: bold; color: #00adb5;">{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}
+                    <div style="color: #ff2e63; font-size: 0.9em; margin-top: 5px;">{{ field.errors|striptags }}</div>
+                {% endif %}
+            </div>
+        {% endfor %}
+
+        <div style="margin-top: 20px; display: flex; gap: 10px;">
+            <button type="submit" class="btn" style="background-color: #00adb5; color: #fff; padding: 8px 15px; border-radius: 5px; font-weight: bold; border: none; cursor: pointer;">💾 Save Wallet</button>
+            <a href="{% url 'account_list' %}" style="padding: 10px; color: #aaa;">Cancel</a>
+        </div>
+    </form>
+{% endblock %}

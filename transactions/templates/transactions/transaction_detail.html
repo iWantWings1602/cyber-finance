@@ -28,9 +28,14 @@
         {% endif %}
     </div>
 
-    <div style="margin-top: 20px; display: flex; gap: 10px;">
-        <a href="{% url 'transaction_update' transaction.pk %}" class="btn">✏ Edit Record</a>
-        <a href="{% url 'transaction_delete' transaction.pk %}" class="btn btn-danger">🗑 Delete</a>
-    </div>
+
+    {% if user == transaction.owner or user.is_staff %}
+        <div style="margin-top: 20px; display: flex; gap: 10px;">
+            <a href="{% url 'transaction_update' transaction.pk %}" class="btn" style="background-color: #00adb5; color: #fff; padding: 8px 15px; border-radius: 5px; font-weight: bold;">✏ Edit Record</a>
+            <a href="{% url 'transaction_delete' transaction.pk %}" class="btn btn-danger">🗑 Delete</a>
+        </div>
+    {% endif %}
+
 {% endblock %}
+
 

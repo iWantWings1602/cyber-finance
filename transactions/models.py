@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.validators import MinValueValidator
 from django.urls import reverse
+from django.contrib.auth.models import User
 
 
 class Account(models.Model):
@@ -69,6 +70,13 @@ class Transaction(models.Model):
         ('expense', 'Expense'),
         ('income', 'Income'),
     ]
+
+    owner = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='transactions',
+        null=True,
+        verbose_name='Owner')
 
     account = models.ForeignKey(
         Account,

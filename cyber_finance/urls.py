@@ -15,21 +15,28 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from transactions import views
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+        #Вбудовані маршрути для login та logout
+    path('accounts/', include('django.contrib.auth.urls')),
+        #Кастомний маршрут для реєстрації (signup)
+    path('accounts/signup/', views.SignUpView.as_view(), name='signup'),
+        #Маршрути для нашого застосунку
     path('', views.TransactionListView.as_view(), name='transaction_list'),
     path('transactions/new/', views.TransactionCreateView.as_view(), name='transaction_create'),
+    path('transactions/my/', views.MyTransactionsListView.as_view(), name='my_transactions'),
     path('transactions/large/', views.LargeExpensesListView.as_view(), name='large_expenses'),
-    path('transactions/<int:pk>', views.TransactionDetailView.as_view(), name='transaction_detail'),
+    path('transactions/<int:pk>/', views.TransactionDetailView.as_view(), name='transaction_detail'),
     path('transactions/<int:pk>/edit/', views.TransactionUpdateView.as_view(), name='transaction_update'),
     path('transactions/<int:pk>/delete/', views.TransactionDeleteView.as_view(), name='transaction_delete'),
-
-    path('accounts/', views.AccountListView.as_view(), name='account_list'),
-    path('accounts/new/', views.AccountCreateView.as_view(), name='account_create'),
-    path('accounts/<int:pk>/', views.AccountDetailView.as_view(), name='account_detail'),
-    path('accounts/<int:pk>/edit/', views.AccountUpdateView.as_view(), name='account_update'),
+        #Маршрути для рахунків
+    path('accounts_list/', views.AccountListView.as_view(), name='account_list'),
+    path('accounts_list/new/', views.AccountCreateView.as_view(), name='account_create'),
+    path('accounts_list/<int:pk>/', views.AccountDetailView.as_view(), name='account_detail'),
+    path('accounts_list/<int:pk>/edit/', views.AccountUpdateView.as_view(), name='account_update'),
 ]
 
